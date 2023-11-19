@@ -89,10 +89,10 @@ jobs:
         git config --global user.name "bot"
         make O=out CC=clang ARCH=arm64 ${{ env.KERNEL_DEFCONFIG }}
         yes "" | make O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi-
-        cp out/arch/arm64/boot/${{ env.KERNEL_FILE }} $GITHUB_WORKSPACE/AK3
+        cp out/arch/arm64/boot/${{ env.KERNEL_FILE }} $GITHUB_WORKSPACE/AnyKernel3
         
     - name: Upload the kernel zip
       uses: actions/upload-artifact@v3
       with:
         name: ${{ env.KSUV }}_Lavender_4.19_${{ env.BUILD_TIME}}
-        path: AK3/*
+        path: AnyKernel3/*
