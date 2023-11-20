@@ -76,7 +76,7 @@ jobs:
         cd android-kernel
         curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
         echo "$(cd KernelSU && git rev-list --count HEAD)" > ksu_version.txt
-        KSU_VERSION="ccflags-y += -DKSU_VERSION=$(($(cat ksu_version.txt) + 10200))"
+        KSU_VERSION="$(($(cat ksu_version.txt) + 10200))"
         echo "KSUV=$KSU_VERSION" >> $GITHUB_ENV
               
     - name: Build kernel
