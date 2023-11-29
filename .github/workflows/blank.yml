@@ -73,7 +73,7 @@ jobs:
             
     - name: Setup KernelSU
       run: |
-      	git clone https://github.com/tiann/KernelSU -b main ksu
+        git clone -b main https://github.com/tiann/KernelSU.git ksu
         mkdir -p project/drivers/KernelSU
         cp -r ksu/kernel/* project/drivers/KernelSU
         echo "$(cd ksu && git rev-list --count HEAD)" > ksu_version.txt
