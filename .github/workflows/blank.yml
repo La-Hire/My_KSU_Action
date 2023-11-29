@@ -82,7 +82,7 @@ jobs:
         KSU_VERSION="$(($(cat ksu_version.txt) + 10200))"
         echo "KSUVer=$KSU_VERSION" >> $GITHUB_ENV
         cd project
-        git apply KERNELSU.p
+        git apply patch/KERNELSU.p
         echo "CONFIG_KSU=y" >> arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
               
     - name: Build kernel
