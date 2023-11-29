@@ -11,7 +11,7 @@ on:
       KERNEL_SOURCE_BRANCH:
         description: 'Branch'
         required: true
-        default: 'R1'
+        default: '13-Retro'
       KERNEL_DEFCONFIG:
         description: 'Defconfig'
         required: true
@@ -67,26 +67,27 @@ jobs:
         github-server-url: 'https://github.com'
         repository: ${{ env.KERNEL_SOURCE }}
         ref: ${{ env.KERNEL_SOURCE_BRANCH }}
-        path: android-kernel
+        path: project
         submodules: recursive
         fetch-depth: 1
             
     - name: Setup KernelSU
       run: |
-        cd android-kernel
-        wget https://github.com/ImSpiDy/kernel_xiaomi_lavender-4.19/raw/13-Retro/patch/KERNELSU.p
-        
-        echo "CONFIG_KSU=y" >> arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
-        curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
-        echo "$(cd KernelSU && git rev-list --count HEAD)" > ksu_version.txt
+      	git clone https://github.com/tiann/KernelSU -b main ksu
+        mkdir -p project/drivers/KernelSU
+        cp -r ksu/kernel/* project/drivers/KernelSU
+        echo "$(cd ksu && git rev-list --count HEAD)" > ksu_version.txt
+        KSUV="ccflags-y += -DKSU_VERSION=$(($(cat ksu_version.txt) + 10200))"
+        echo "$KSUV" >> project/drivers/KernelSU/Makefile
         KSU_VERSION="$(($(cat ksu_version.txt) + 10200))"
-        echo "KSUV=$KSU_VERSION" >> $GITHUB_ENV
-
+        echo "KSUVer=$KSU_VERSION" >> $GITHUB_ENV
+        cd project
         git apply KERNELSU.p
+        echo "CONFIG_KSU=y" >> arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
               
     - name: Build kernel
       run: |
-        cd android-kernel
+        cd project
         export PATH=$GITHUB_WORKSPACE/clang/bin:$PATH
         export ARCH=arm64
         export SUBARCH=arm64
@@ -99,5 +100,5 @@ jobs:
     - name: Upload the kernel zip
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ env.KSUV }}_Lavender_4.19_${{ env.BUILD_TIME}}
+        name: ${{ env.KSUVer }}_Lavender_4.19_${{ env.BUILD_TIME}}
         path: AnyKernel3/*
