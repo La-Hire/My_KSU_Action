@@ -91,5 +91,5 @@ jobs:
     - name: Upload the kernel zip
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ env.KSUVer }}_Lavender_4.19_${{ env.BUILD_TIME}}
+        name: ${{ env.KSUVer }}_Nokia_4.4_${{ env.BUILD_TIME}}
         path: AnyKernel3/*
