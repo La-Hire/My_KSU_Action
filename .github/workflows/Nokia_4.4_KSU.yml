@@ -23,7 +23,7 @@ on:
       CLANG_URL:
         description: 'Clang URL'
         required: true
-        default: 'https://github.com/ZyCromerZ/Clang/releases/download/17.0.0-20230725-release/Clang-17.0.0-20230725.tar.gz'
+        default: 'https://github.com/ZyCromerZ/Clang/releases/download/14.0.6-20231003-release/Clang-14.0.6-20231003.tar.gz'
 
 
 jobs:
@@ -64,7 +64,11 @@ jobs:
             
     - name: Setup KernelSU
       run: |
-        mkdir $GITHUB_WORKSPACE/AnyKernel3
+        git clone --depth=1 https://github.com/osm0sis/AnyKernel3.git
+        cd AnyKernel3
+        sed -i 's/do.devicecheck=1/do.devicecheck=0/' anykernel.sh
+        sed -i 's/is_slot_device=0/is_slot_device=1/' anykernel.sh
+        sed -i 's/block=\/dev\/block\/platform\/omap\/omap_hsmmc\.0\/by-name\/boot/block=\/dev\/block\/bootdevice\/by-name\/boot/' anykernel.sh
         cd project
         curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
         echo "$(cd KernelSU && git rev-list --count HEAD)" > ksu_version.txt
@@ -81,7 +85,7 @@ jobs:
         git config --global user.name "bot"
         make O=out CC=clang ARCH=arm64 ${{ env.KERNEL_DEFCONFIG }}
         yes "" | make O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi-
-        cp -rf out/arch/arm64/boot/* $GITHUB_WORKSPACE/AnyKernel3
+        cp out/arch/arm64/boot/${{ env.KERNEL_FILE }} $GITHUB_WORKSPACE/AnyKernel3
         cd out/arch/arm64/boot && ls
         
     - name: Upload the kernel zip
