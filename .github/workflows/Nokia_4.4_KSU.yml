@@ -68,8 +68,6 @@ jobs:
         cd project
         curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
         echo "$(cd KernelSU && git rev-list --count HEAD)" > ksu_version.txt
-        KSUV="ccflags-y += -DKSU_VERSION=$(($(cat ksu_version.txt) + 10200))"
-        echo "$KSUV" >> project/drivers/KernelSU/Makefile
         KSU_VERSION="$(($(cat ksu_version.txt) + 10200))"
         echo "KSUVer=$KSU_VERSION" >> $GITHUB_ENV
               
