@@ -65,15 +65,13 @@ jobs:
     - name: Setup KernelSU
       run: |
         mkdir $GITHUB_WORKSPACE/AnyKernel3
-        git clone -b main https://github.com/tiann/KernelSU.git ksu
-        mkdir -p project/drivers/KernelSU
-        cp -r ksu/kernel/* project/drivers/KernelSU
-        echo "$(cd ksu && git rev-list --count HEAD)" > ksu_version.txt
+        cd project
+        curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
+        echo "$(cd KernelSU && git rev-list --count HEAD)" > ksu_version.txt
         KSUV="ccflags-y += -DKSU_VERSION=$(($(cat ksu_version.txt) + 10200))"
         echo "$KSUV" >> project/drivers/KernelSU/Makefile
         KSU_VERSION="$(($(cat ksu_version.txt) + 10200))"
         echo "KSUVer=$KSU_VERSION" >> $GITHUB_ENV
-        cd project
               
     - name: Build kernel
       run: |
@@ -85,7 +83,7 @@ jobs:
         git config --global user.name "bot"
         make O=out CC=clang ARCH=arm64 ${{ env.KERNEL_DEFCONFIG }}
         yes "" | make O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi-
-        cp out/arch/arm64/boot/${{ env.KERNEL_FILE }} $GITHUB_WORKSPACE/AnyKernel3
+        cp out/arch/arm64/boot/* $GITHUB_WORKSPACE/AnyKernel3
         cd out/arch/arm64/boot && ls
         
     - name: Upload the kernel zip
