@@ -1,5 +1,5 @@
 name: Build Nokia 4.4 KSU
-https://github.com/LineageOS/android_kernel_nokia_sdm660
+
 on:
   workflow_dispatch:
 
