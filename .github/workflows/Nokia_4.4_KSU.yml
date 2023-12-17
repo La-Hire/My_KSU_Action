@@ -64,6 +64,7 @@ jobs:
             
     - name: Setup KernelSU
       run: |
+        ls
         git clone --depth=1 https://github.com/osm0sis/AnyKernel3.git
         cd AnyKernel3
         sed -i 's/do.devicecheck=1/do.devicecheck=0/' anykernel.sh
