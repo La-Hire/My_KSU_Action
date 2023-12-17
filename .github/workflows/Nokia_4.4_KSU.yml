@@ -48,9 +48,6 @@ jobs:
     - name: Download Clang Toolchain
       run: |
         mkdir clang
-        ls
-        cd ..
-        ls
         wget -q ${{ env.CLANG_URL }} -O clang.tar.gz
         tar -C clang/ -zxf clang.tar.gz
 
@@ -67,7 +64,6 @@ jobs:
             
     - name: Setup KernelSU
       run: |
-        ls
         git clone --depth=1 https://github.com/osm0sis/AnyKernel3.git
         cd AnyKernel3
         sed -i 's/do.devicecheck=1/do.devicecheck=0/' anykernel.sh
@@ -75,6 +71,7 @@ jobs:
         sed -i 's/block=\/dev\/block\/platform\/omap\/omap_hsmmc\.0\/by-name\/boot/block=\/dev\/block\/bootdevice\/by-name\/boot/' anykernel.sh
         cd ..
         cd project
+        git apply ./nokia_ksu.patch
         curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
         echo "$(cd KernelSU && git rev-list --count HEAD)" > ksu_version.txt
         KSU_VERSION="$(($(cat ksu_version.txt) + 10200))"
