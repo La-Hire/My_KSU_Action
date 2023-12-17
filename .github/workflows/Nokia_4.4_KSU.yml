@@ -61,7 +61,6 @@ jobs:
         path: project
         submodules: recursive
         fetch-depth: 1
-    - run: git apply nokia_ksu.patch
             
     - name: Setup KernelSU
       run: |
@@ -72,6 +71,8 @@ jobs:
         sed -i 's/block=\/dev\/block\/platform\/omap\/omap_hsmmc\.0\/by-name\/boot/block=\/dev\/block\/bootdevice\/by-name\/boot/' anykernel.sh
         cd ..
         cd project
+        wget https://github.com/La-Hire/My_KSU_Action/raw/main/nokia_ksu.patch
+        git apply nokia_ksu.patch
         curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
         echo "$(cd KernelSU && git rev-list --count HEAD)" > ksu_version.txt
         KSU_VERSION="$(($(cat ksu_version.txt) + 10200))"
