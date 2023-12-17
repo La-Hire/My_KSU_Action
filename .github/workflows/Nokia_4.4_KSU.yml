@@ -48,6 +48,9 @@ jobs:
     - name: Download Clang Toolchain
       run: |
         mkdir clang
+        ls
+        cd ..
+        ls
         wget -q ${{ env.CLANG_URL }} -O clang.tar.gz
         tar -C clang/ -zxf clang.tar.gz
 
