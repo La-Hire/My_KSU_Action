@@ -27,7 +27,7 @@ on:
       CLANG_URL:
         description: 'Clang URL'
         required: true
-        default: 'https://github.com/ZyCromerZ/Clang/releases/download/17.0.0-20230725-release/Clang-17.0.0-20230725.tar.gz'
+        default: 'https://github.com/ZyCromerZ/Clang/releases/download/14.0.6-20231003-release/Clang-14.0.6-20231003.tar.gz'
 
 
 jobs:
