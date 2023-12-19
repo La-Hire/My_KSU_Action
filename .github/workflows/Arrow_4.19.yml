@@ -1,4 +1,4 @@
-name: Build Lavender 4.19 KSU (ArrowOS)
+name: Build Lavender 4.19 KSU ArrowOS
 
 on:
   workflow_dispatch:
