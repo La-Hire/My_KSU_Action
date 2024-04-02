@@ -51,7 +51,9 @@ jobs:
         wget -q ${{ env.CLANG_URL }} -O clang.tar.gz
         tar -C clang/ -zxf clang.tar.gz
 
-
+    
+    - name: Checkout repo
+    - uses: actions/checkout@v4
     - name: Checkout Kernel Source
       uses: actions/checkout@v4
       with:
@@ -62,9 +64,7 @@ jobs:
         submodules: recursive
         fetch-depth: 1
     
-    - uses: actions/checkout@v4
-      with:
-        path: '.'
+
       
     - name: Setup KernelSU
       run: |
