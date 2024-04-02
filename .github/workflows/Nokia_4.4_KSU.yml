@@ -74,7 +74,8 @@ jobs:
         sed -i 's/is_slot_device=0/is_slot_device=1/' anykernel.sh
         sed -i 's/block=\/dev\/block\/platform\/omap\/omap_hsmmc\.0\/by-name\/boot/block=\/dev\/block\/bootdevice\/by-name\/boot/' anykernel.sh
         cd ..
-        mv nokia_ksu.patch project
+        ls
+        mv nokia_ksu.patch project/
         cd project
         git apply nokia_ksu.patch
         curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
