@@ -77,6 +77,7 @@ jobs:
         ls
         mv nokia_ksu.patch project/
         cd project
+        sed -i 's/clock_gettime_return\,\ shift=1/clock_gettime_return\ shift=1/' arch/arm64/kernel/vdso/gettimeofday.S
         git apply nokia_ksu.patch
         curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
         echo "$(cd KernelSU && git rev-list --count HEAD)" > ksu_version.txt
