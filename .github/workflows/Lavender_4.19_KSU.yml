@@ -106,7 +106,7 @@ jobs:
         git config --global user.name "bot"
         make O=out CC=clang ARCH=arm64 ${{ env.KERNEL_DEFCONFIG }}
         yes "" | make O=out ARCH=arm64 LLVM=1 LLVM_IAS=1 CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_COMPAT=arm-linux-androideabi- AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip
-        cp project/out/arch/arm64/boot/${{ env.KERNEL_FILE }} $GITHUB_WORKSPACE/AnyKernel3
+        cp out/arch/arm64/boot/${{ env.KERNEL_FILE }} $GITHUB_WORKSPACE/AnyKernel3
         cd $GITHUB_WORKSPACE/AnyKernel3
         
     - name: Upload the kernel zip
