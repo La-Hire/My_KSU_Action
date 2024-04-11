@@ -28,6 +28,11 @@ on:
         description: 'Clang URL'
         required: true
         default: 'https://github.com/ZyCromerZ/Clang/releases/download/16.0.6-20240303-release/Clang-16.0.6-20240303.tar.gz'
+      USE_KERNELSU:
+        description: 'Use KernelSU'
+        required: true
+        default: 'false'
+        type: boolean
 
 
 jobs:
@@ -46,6 +51,7 @@ jobs:
         echo "KERNEL_FILE=${{ github.event.inputs.KERNEL_FILE }}" >> $GITHUB_ENV
         echo "AK3_SOURCE=${{ github.event.inputs.AK3_SOURCE }}" >> $GITHUB_ENV
         echo "CLANG_URL=${{ github.event.inputs.CLANG_URL }}" >> $GITHUB_ENV
+        echo "USE_KPROBES=${{ github.event.inputs.USE_KPROBES }}" >> $GITHUB_ENV
     
     - name: Setup build kernel environment
       run: |
@@ -74,17 +80,20 @@ jobs:
         submodules: recursive
         fetch-depth: 1
             
-    - name: Setup KernelSU
+    - name: Setup path_umount
       run: |
         cd project
         git apply ../path_umount.patch
-        curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
-        echo "CONFIG_KSU=y" >> arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
         echo "CONFIG_KALLSYMS_ALL=y" >> arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
         echo "CONFIG_DEBUG_KERNEL=y" >> arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
-        echo "$(cd KernelSU && git rev-list --count HEAD)" > ksu_version.txt
-        KSUV="ccflags-y += -DKSU_VERSION=$(($(cat ksu_version.txt) + 10200))"
-        KSU_VERSION="$(($(cat ksu_version.txt) + 10200))"
+        
+    - name: Setup KernelSU
+      if: env.USE_KERNELSU == 'true'
+      run: |
+        cd project
+        curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
+        cd KernelSU
+        KSU_VERSION="$(($(git rev-list --count HEAD) + 10200))"
         echo "KSUVer=$KSU_VERSION" >> $GITHUB_ENV
               
     - name: Build kernel
@@ -99,15 +108,14 @@ jobs:
         yes "" | make O=out ARCH=arm64 LLVM=1 LLVM_IAS=1 CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_COMPAT=arm-linux-androideabi- AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip
         cp project/out/arch/arm64/boot/${{ env.KERNEL_FILE }} $GITHUB_WORKSPACE/AnyKernel3
         cd $GITHUB_WORKSPACE/AnyKernel3
-        rm -rf .github
-        rm banner
-        rm README.md
-        rm LICENSE
         
     - name: Upload the kernel zip
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.KSUVer }}_Lavender_4.19_${{ env.BUILD_TIME}}
-        path: AnyKernel3/*
-          
-          
+        path: |
+          AnyKernel3/*
+          !AnyKernel3/.git*
+          !AnyKernel3/banner
+          !AnyKernel3/README.md
+          !AnyKernel3/LICENSE
