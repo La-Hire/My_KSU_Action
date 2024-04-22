@@ -30,19 +30,21 @@ jobs:
         cd kernel
         export ARCH=arm64
         export SUBARCH=arm64
-        export PATH="$GITHUB_WORKSPACE/gcc-64/bin:$PATH"
-        export PATH="$GITHUB_WORKSPACE/gcc-32/bin:$PATH"
-        export PATH="$GITHUB_WORKSPACE/clang/bin:$PATH"
-        export PATH="$GITHUB_WORKSPACE/misc/lz4:$PATH"
-        export PATH="$GITHUB_WORKSPACE/misc/dtc:$PATH"
-        export PATH="$GITHUB_WORKSPACE/misc/libufdt:$PATH"
-        export LD_LIBRARY_PATH="$GITHUB_WORKSPACE/clang/lib64:$LD_LIBRARY_PATH"
+        export PATH=$GITHUB_WORKSPACE/gcc-64/bin:$PATH
+        export PATH=$GITHUB_WORKSPACE/gcc-32/bin:$PATH
+        export PATH=$GITHUB_WORKSPACE/clang/bin:$PATH
+        export PATH=$GITHUB_WORKSPACE/misc/lz4:$PATH
+        export PATH=$GITHUB_WORKSPACE/misc/dtc:$PATH
+        export PATH=$GITHUB_WORKSPACE/misc/libufdt:$PATH
+        export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/clang/lib64:$LD_LIBRARY_PATH
         git config --global user.email "bot@example.com"
         git config --global user.name "bot"
 
         sed -i s/'CONFIG_LTO_CLANG=n'/'CONFIG_LTO_CLANG=n'/g $GITHUB_WORKSPACE/kernel/arch/arm64/configs/b1c1_defconfig
-        make O=out ARCH=arm64 LTO=none CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi- b1c1_defconfig
-        make O=out ARCH=arm64 LTO=none CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-
+        echo CONFIG_LTO_NONE=y >> $HOME/kernel/arch/arm64/configs/b1c1_defconfig
+        echo CONFIG_LTO=n >> $HOME/kernel/arch/arm64/configs/b1c1_defconfig
+        make O=out ARCH=arm64 CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi- b1c1_defconfig
+        make O=out ARCH=arm64 CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-
     
     - name: Upload the zip
       uses: actions/upload-artifact@v4
