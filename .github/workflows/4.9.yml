@@ -26,11 +26,8 @@ jobs:
     - name: Build kernel
       run: |
         git clone --depth 1 https://github.com/LineageOS/android_kernel_google_msm-4.9 kernel
-        cd $GITHUB_WORKSPACE/kernel/arch/arm64/configs
-        ls
         cd $GITHUB_WORKSPACE
         cd kernel
-        ls
         export ARCH=arm64
         export SUBARCH=arm64
         export PATH=$GITHUB_WORKSPACE/gcc-64/bin:$PATH
@@ -54,4 +51,4 @@ jobs:
       with:
         name: 4.9_${{ env.BUILD_TIME}}
         path: |
-          kernel/kernel/out/arch/arm64/boot/*
+          $GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/*
