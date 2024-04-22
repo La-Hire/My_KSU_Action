@@ -22,12 +22,13 @@ jobs:
         mkdir misc
         wget -O misc.tar.gz https://android.googlesource.com/platform/prebuilts/misc/+archive/refs/heads/android-msm-crosshatch-4.9-android12/linux-x86.tar.gz
         tar -C misc/ -zxvf misc.tar.gz
-        ls
              
     - name: Build kernel
       run: |
         git clone --depth 1 https://github.com/LineageOS/android_kernel_google_msm-4.9 kernel
-        
+        cd $GITHUB_WORKSPACE/kernel/arch/arm64/configs
+        ls
+        cd $GITHUB_WORKSPACE
         cd kernel
         ls
         export ARCH=arm64
