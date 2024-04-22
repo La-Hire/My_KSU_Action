@@ -1,4 +1,4 @@
-name: Build 4.14
+name: Build 4.9
 
 on:
   workflow_dispatch:
@@ -40,7 +40,7 @@ jobs:
         git config --global user.email "bot@example.com"
         git config --global user.name "bot"
 
-        sed -i s/'CONFIG_LTO_CLANG=n'/'# CONFIG_LTO_CLANG is not set'/g $GITHUB_WORKSPACE/kernel/arch/arm64/configs/b1c1_defconfig
+        sed -i s/'CONFIG_LTO_CLANG=n'/'CONFIG_LTO_CLANG=n'/g $GITHUB_WORKSPACE/kernel/arch/arm64/configs/b1c1_defconfig
         make O=out ARCH=arm64 CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi- b1c1_defconfig
         make O=out ARCH=arm64 CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-
     
