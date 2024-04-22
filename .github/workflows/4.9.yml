@@ -51,4 +51,4 @@ jobs:
       with:
         name: 4.9_${{ env.BUILD_TIME}}
         path: |
-          $GITHUB_WORKSPACE/kernel/out/arch/arm64/boot/*
+          kernel/out/arch/arm64/boot/*
