@@ -22,12 +22,14 @@ jobs:
         mkdir misc
         wget -O misc.tar.gz https://android.googlesource.com/platform/prebuilts/misc/+archive/refs/heads/android-msm-crosshatch-4.9-android12/linux-x86.tar.gz
         tar -C misc/ -zxvf misc.tar.gz
-
-        git clone --depth 1 https://github.com/LineageOS/android_kernel_google_msm-4.9 kernel
+        ls
              
     - name: Build kernel
       run: |
+        git clone --depth 1 https://github.com/LineageOS/android_kernel_google_msm-4.9 kernel
+        
         cd kernel
+        ls
         export ARCH=arm64
         export SUBARCH=arm64
         export PATH=$GITHUB_WORKSPACE/gcc-64/bin:$PATH
@@ -40,7 +42,7 @@ jobs:
         git config --global user.email "bot@example.com"
         git config --global user.name "bot"
 
-        sed -i s/'CONFIG_LTO_CLANG=n'/'CONFIG_LTO_CLANG=n'/g arch/arm64/configs/b1c1_defconfig
+        sed -i s/'CONFIG_LTO_CLANG=n'/'CONFIG_LTO_CLANG=n'/g $GITHUB_WORKSPACE/kernel/arch/arm64/configs/b1c1_defconfig
         echo CONFIG_LTO_NONE=y >> $HOME/kernel/arch/arm64/configs/b1c1_defconfig
         echo CONFIG_LTO=n >> $HOME/kernel/arch/arm64/configs/b1c1_defconfig
         make O=out ARCH=arm64 CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi- b1c1_defconfig
