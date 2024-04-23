@@ -51,7 +51,7 @@ jobs:
     - name: Setup path_umount
       run: |
         cd project
-        git apply ../path_umount.patch
+
         echo "CONFIG_KALLSYMS_ALL=y" >> arch/arm64/configs/nokia_defconfig
         echo "CONFIG_DEBUG_KERNEL=y" >> arch/arm64/configs/nokia_defconfig
         
