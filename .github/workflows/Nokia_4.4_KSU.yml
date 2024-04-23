@@ -76,18 +76,18 @@ jobs:
         export PATH=$GITHUB_WORKSPACE/misc/libufdt:$PATH
         export LD_LIBRARY_PATH=$GITHUB_WORKSPACE/clang/lib64:$LD_LIBRARY_PATH
         
-        sed -i s/CONFIG_WIL6210=m/CONFIG_WIL6210=y/g arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
-        sed -i s/CONFIG_USB_GSPCA=m/CONFIG_USB_GSPCA=y/g arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
-        sed -i s/CONFIG_DVB_MPQ=m/CONFIG_DVB_MPQ=y/g arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
-        sed -i s/CONFIG_DVB_MPQ_DEMUX=m/CONFIG_DVB_MPQ_DEMUX=y/g arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
-        sed -i s/CONFIG_BRIDGE_NETFILTER=m/CONFIG_BRIDGE_NETFILTER=y/g arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
+        sed -i s/CONFIG_WIL6210=m/CONFIG_WIL6210=y/g arch/arm64/configs/nokia_defconfig
+        sed -i s/CONFIG_USB_GSPCA=m/CONFIG_USB_GSPCA=y/g arch/arm64/configs/nokia_defconfig
+        sed -i s/CONFIG_DVB_MPQ=m/CONFIG_DVB_MPQ=y/g arch/arm64/configs/nokia_defconfig
+        sed -i s/CONFIG_DVB_MPQ_DEMUX=m/CONFIG_DVB_MPQ_DEMUX=y/g arch/arm64/configs/nokia_defconfig
+        sed -i s/CONFIG_BRIDGE_NETFILTER=m/CONFIG_BRIDGE_NETFILTER=y/g arch/arm64/configs/nokia_defconfig
 
         git config --global user.email "bot@example.com"
         git config --global user.name "bot"
         git add .
         git commit -m mod_inline
         
-        make O=out ARCH=arm64 CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi- ${{ env.KERNEL_DEFCONFIG }}
+        make O=out ARCH=arm64 CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi- nokia_defconfig
         yes "" | make O=out ARCH=arm64 CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-
         cp -r out/arch/arm64/boot/* $GITHUB_WORKSPACE/AnyKernel3
         
