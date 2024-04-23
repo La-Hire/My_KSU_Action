@@ -4,35 +4,25 @@ on:
   workflow_dispatch:
 
     inputs:
-      KERNEL_SOURCE:
-        description: 'Kernel Source'
+      USE_KERNELSU:
+        description: 'Use KernelSU'
         required: true
-        default: 'LineageOS/android_kernel_nokia_sdm660'
-      KERNEL_SOURCE_BRANCH:
-        description: 'Branch'
-        required: true
-        default: 'lineage-21'
-      KERNEL_DEFCONFIG:
-        description: 'Defconfig'
-        required: true
-        default: 'nokia_defconfig'
-      KERNEL_FILE:
-        description: 'Your kernel out image name'
-        required: true
-        default: 'Image.gz-dtb'
+        default: 'false'
+        type: boolean
 
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    
+
+    - uses: actions/checkout@v4
+      with:
+          fetch-depth: 0
+          
     - name: Setup Configuration
       run: |
-        echo "KERNEL_SOURCE=${{ github.event.inputs.KERNEL_SOURCE }}" >> $GITHUB_ENV
-        echo "KERNEL_SOURCE_BRANCH=${{ github.event.inputs.KERNEL_SOURCE_BRANCH }}" >> $GITHUB_ENV
-        echo "KERNEL_DEFCONFIG=${{ github.event.inputs.KERNEL_DEFCONFIG }}" >> $GITHUB_ENV
-        echo "KERNEL_FILE=${{ github.event.inputs.KERNEL_FILE }}" >> $GITHUB_ENV
+        echo "USE_KPROBES=${{ github.event.inputs.USE_KPROBES }}" >> $GITHUB_ENV
     
     - name: Setup build kernel environment
       run: |
@@ -53,33 +43,21 @@ jobs:
         wget -O misc.tar.gz https://android.googlesource.com/platform/prebuilts/misc/+archive/refs/heads/android-msm-crosshatch-4.9-android12/linux-x86.tar.gz
         tar -C misc/ -zxvf misc.tar.gz
     
-    - name: Checkout repo
-      uses: actions/checkout@v4
-    - name: Checkout Kernel Source
-      uses: actions/checkout@v4
-      with:
-        github-server-url: 'https://github.com'
-        repository: ${{ env.KERNEL_SOURCE }}
-        ref: ${{ env.KERNEL_SOURCE_BRANCH }}
-        path: project
-        submodules: recursive
-        fetch-depth: 1
-    
 
-      
-    - name: Setup KernelSU
+    - name: Checkout Kernel Source
       run: |
-        git clone --depth=1 https://github.com/osm0sis/AnyKernel3.git
-        cd AnyKernel3
-        sed -i 's/do.devicecheck=1/do.devicecheck=0/' anykernel.sh
-        sed -i 's/is_slot_device=0/is_slot_device=1/' anykernel.sh
-        sed -i 's/block=\/dev\/block\/platform\/omap\/omap_hsmmc\.0\/by-name\/boot/block=\/dev\/block\/bootdevice\/by-name\/boot/' anykernel.sh
-        cd ..
-        ls
-        mv nokia_ksu.patch project/
+        git clone --depth 1 https://github.com/LineageOS/android_kernel_nokia_sdm660 project 
+    
+    - name: Setup path_umount
+      run: |
         cd project
-        sed -i 's/clock_gettime_return\,\ shift=1/clock_gettime_return\ shift=1/' arch/arm64/kernel/vdso/gettimeofday.S
-        git apply nokia_ksu.patch
+        git apply ../path_umount.patch
+        echo "CONFIG_KALLSYMS_ALL=y" >> arch/arm64/configs/nokia_defconfig
+        echo "CONFIG_DEBUG_KERNEL=y" >> arch/arm64/configs/nokia_defconfig
+        
+    - name: Setup KernelSU
+      if: env.USE_KERNELSU == 'true'
+      run: |
         curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
         echo "$(cd KernelSU && git rev-list --count HEAD)" > ksu_version.txt
         KSU_VERSION="$(($(cat ksu_version.txt) + 10200))"
@@ -88,7 +66,6 @@ jobs:
     - name: Build kernel
       run: |
         cd project
-        export PATH=$GITHUB_WORKSPACE/clang/bin:$PATH
         export ARCH=arm64
         export SUBARCH=arm64
         export PATH=$GITHUB_WORKSPACE/gcc-64/bin:$PATH
@@ -108,14 +85,14 @@ jobs:
         git config --global user.email "bot@example.com"
         git config --global user.name "bot"
         git add .
-        git commit -m ksu
+        git commit -m mod_inline
         
         make O=out ARCH=arm64 CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi- ${{ env.KERNEL_DEFCONFIG }}
         yes "" | make O=out ARCH=arm64 CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-
         cp -r out/arch/arm64/boot/* $GITHUB_WORKSPACE/AnyKernel3
         
     - name: Upload the kernel zip
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.KSUVer }}_Nokia_4.4_${{ env.BUILD_TIME}}
-        path: AnyKernel3/*
+        name: Nokia_4.4_${{ env.BUILD_TIME}}
+        path: project/out/arch/arm64/boot/*
