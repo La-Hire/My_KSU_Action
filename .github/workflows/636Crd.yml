@@ -46,14 +46,14 @@ jobs:
 
     - name: Checkout Kernel Source
       run: |
-        git clone --depth 1 https://github.com/LycorisOSS/android_kernel_nokia_sdm660.git project 
+        git clone --depth 1 https://github.com/ProjectElixir-Devices/kernel_nokia_sdm660.git project 
     
     - name: Setup path_umount
       run: |
         cd project
 
-        echo "CONFIG_KALLSYMS_ALL=y" >> arch/arm64/configs/sdm660-perf_defconfig
-        echo "CONFIG_DEBUG_KERNEL=y" >> arch/arm64/configs/sdm660-perf_defconfig
+        echo "CONFIG_KALLSYMS_ALL=y" >> arch/arm64/configs/nokia_defconfig
+        echo "CONFIG_DEBUG_KERNEL=y" >> arch/arm64/configs/nokia_defconfig
         
     - name: Setup KernelSU
       if: env.USE_KERNELSU == 'true'
@@ -68,7 +68,7 @@ jobs:
     - name: Setup KernelSU
       if: env.USE_KERNELSU == 'false'
       run: |
-        echo "CONFIG_KSU=n" >> project/arch/arm64/configs/sdm660-perf_defconfig
+        echo "CONFIG_KSU=n" >> project/arch/arm64/configs/nokia_defconfig
               
     - name: Build kernel
       run: |
@@ -89,7 +89,7 @@ jobs:
         git add .
         git commit -m mod_inline
         
-        make O=out ARCH=arm64 CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi- sdm660-perf_defconfig
+        make O=out ARCH=arm64 CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi- nokia_defconfig
         yes "" | make O=out ARCH=arm64 CC=clang AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf OBJSIZE=llvm-size STRIP=llvm-strip HOSTCC=clang HOSTCXX=clang++ HOSTLD=ld.lld CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-androideabi-
   
         
