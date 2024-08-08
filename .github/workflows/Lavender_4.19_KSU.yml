@@ -7,11 +7,11 @@ on:
       KERNEL_SOURCE:
         description: 'Kernel Source'
         required: true
-        default: 'RedmiNote7-Series/4.19_kernel_xiaomi_sdm660'
+        default: 'xyz-sundram/kernel_xiaomi_sdm660'
       KERNEL_SOURCE_BRANCH:
         description: 'Branch'
         required: true
-        default: '14.0'
+        default: 'main'
       KERNEL_DEFCONFIG:
         description: 'Defconfig'
         required: true
@@ -109,26 +109,11 @@ jobs:
         cp out/arch/arm64/boot/${{ env.KERNEL_FILE }} $GITHUB_WORKSPACE/AnyKernel3
         cd $GITHUB_WORKSPACE/AnyKernel3
     
-    - name: Upload the KSU zip
-      if: env.USE_KERNELSU == 'true'
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ env.KSUVer }}_Lavender_4.19_${{ env.BUILD_TIME}}
-        path: |
-          AnyKernel3/*
-          !AnyKernel3/.git*
-          !AnyKernel3/banner
-          !AnyKernel3/README.md
-          !AnyKernel3/LICENSE    
+
     
     - name: Upload the kernel zip
-      if: env.USE_KERNELSU == 'false'
       uses: actions/upload-artifact@v4
       with:
         name: Lavender_4.19_${{ env.BUILD_TIME}}
         path: |
           /home/runner/work/My_KSU_Action/My_KSU_Action/project/out/arch/arm64/boot/*
-          !AnyKernel3/.git*
-          !AnyKernel3/banner
-          !AnyKernel3/README.md
-          !AnyKernel3/LICENSE
