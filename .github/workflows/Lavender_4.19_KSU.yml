@@ -127,7 +127,7 @@ jobs:
       with:
         name: Lavender_4.19_${{ env.BUILD_TIME}}
         path: |
-          AnyKernel3/*
+          /home/runner/work/My_KSU_Action/My_KSU_Action/project/out/arch/arm64/boot/*
           !AnyKernel3/.git*
           !AnyKernel3/banner
           !AnyKernel3/README.md
