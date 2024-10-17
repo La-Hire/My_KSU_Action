@@ -62,8 +62,8 @@ jobs:
 
     - name: Download Clang Toolchain
       run: |
-        git clone https://gitlab.com/ThankYouMario/android_prebuilts_clang-standalone -b 16 clang-llvm --depth=1 --no-tags --single-branch clang
-        git clone https://github.com/KudProject/prebuilts_gas_linux-x86.git gcc --depth=1 --single-branch --no-tags gcc
+        git clone https://gitlab.com/ThankYouMario/android_prebuilts_clang-standalone -b 16 --depth=1 --no-tags --single-branch clang
+        git clone https://github.com/KudProject/prebuilts_gas_linux-x86.git --depth=1 --single-branch --no-tags gcc
 
     - name: Checkout Kernel Source
       uses: actions/checkout@v4
