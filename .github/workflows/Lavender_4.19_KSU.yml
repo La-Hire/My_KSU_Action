@@ -78,7 +78,7 @@ jobs:
     - name: Setup path_umount
       run: |
         cd project
-        
+        sed -i "s/CONFIG_LTO_CLANG=y/CONFIG_LTO_CLANG=n/g" > arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
         echo "CONFIG_KALLSYMS_ALL=y" >> arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
         echo "CONFIG_DEBUG_KERNEL=y" >> arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
         
