@@ -24,10 +24,7 @@ on:
         description: 'AnyKernel3 Source'
         required: true
         default: 'https://github.com/ImSpiDy/AnyKernel3'
-      CLANG_URL:
-        description: 'Clang URL'
-        required: true
-        default: 'https://github.com/ZyCromerZ/Clang/releases/download/16.0.6-20240303-release/Clang-16.0.6-20240303.tar.gz'
+
       USE_KERNELSU:
         description: 'Use KernelSU'
         required: true
@@ -65,10 +62,8 @@ jobs:
 
     - name: Download Clang Toolchain
       run: |
-        mkdir clang
-        wget -q ${{ env.CLANG_URL }} -O clang.tar.gz
-        tar -C clang/ -zxf clang.tar.gz
-
+        git clone https://gitlab.com/ThankYouMario/android_prebuilts_clang-standalone -b 16 clang-llvm --depth=1 --no-tags --single-branch clang
+        git clone https://github.com/KudProject/prebuilts_gas_linux-x86.git gcc --depth=1 --single-branch --no-tags gcc
 
     - name: Checkout Kernel Source
       uses: actions/checkout@v4
@@ -83,7 +78,7 @@ jobs:
     - name: Setup path_umount
       run: |
         cd project
-        git apply ../path_umount.patch
+        
         echo "CONFIG_KALLSYMS_ALL=y" >> arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
         echo "CONFIG_DEBUG_KERNEL=y" >> arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
         
@@ -99,7 +94,7 @@ jobs:
     - name: Build kernel
       run: |
         cd project
-        export PATH=$GITHUB_WORKSPACE/clang/bin:$PATH
+        export PATH=$GITHUB_WORKSPACE/clang/bin:$GITHUB_WORKSPACE/gcc/bin:$PATH
         export ARCH=arm64
         export SUBARCH=arm64
         export CFLAGS="-mno-outline-atomics"
