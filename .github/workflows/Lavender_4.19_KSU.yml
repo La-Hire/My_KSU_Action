@@ -86,10 +86,13 @@ jobs:
       if: env.USE_KERNELSU == 'true'
       run: |
         cd project
-        curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
+        curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/refs/heads/magic/kernel/setup.sh" | bash -
         cd KernelSU
         KSU_VERSION="$(($(git rev-list --count HEAD) + 10200))"
         echo "KSUVer=$KSU_VERSION" >> $GITHUB_ENV
+        cd ..
+        git add .
+        git commit -m ksu
               
     - name: Build kernel
       run: |
