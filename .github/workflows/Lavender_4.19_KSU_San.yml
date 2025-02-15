@@ -48,7 +48,7 @@ jobs:
         echo "KERNEL_FILE=${{ github.event.inputs.KERNEL_FILE }}" >> $GITHUB_ENV
         echo "AK3_SOURCE=${{ github.event.inputs.AK3_SOURCE }}" >> $GITHUB_ENV
         echo "CLANG_URL=${{ github.event.inputs.CLANG_URL }}" >> $GITHUB_ENV
-        echo "USE_KERNELSU=${{ github.event.inputs.KERNELSU }}" >> $GITHUB_ENV
+        echo "USE_KERNELSU=${{ github.event.inputs.USE_KERNELSU }}" >> $GITHUB_ENV
 
     
     - name: Setup build kernel environment
