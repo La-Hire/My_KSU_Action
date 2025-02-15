@@ -1,0 +1,51 @@
+From 37a7d6ccbc50fa9569cacf7ab5a8acfe00475199 Mon Sep 17 00:00:00 2001
+From: Your Name <you@example.com>
+Date: Fri, 31 Jan 2025 19:04:39 +0800
+Subject: [PATCH] BACKPORT: maccess: rename strncpy_from_unsafe_user to
+ strncpy_from_user_nofault
+
+---
+ include/linux/uaccess.h | 4 ++--
+ mm/maccess.c            | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index e8c32ae13..ab7d9fa6c 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -348,8 +348,8 @@ extern long notrace probe_user_write(void __user *dst, const void *src, size_t s
+ extern long notrace __probe_user_write(void __user *dst, const void *src, size_t size);
+ 
+ extern long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count);
+-extern long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
+-				     long count);
++long strncpy_from_user_nofault(char *dst, const void __user *unsafe_addr,
++		long count);
+ extern long strnlen_unsafe_user(const void __user *unsafe_addr, long count);
+ 
+ /**
+diff --git a/mm/maccess.c b/mm/maccess.c
+index 6e41ba452..01f938331 100644
+--- a/mm/maccess.c
++++ b/mm/maccess.c
+@@ -181,7 +181,7 @@ long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count)
+ }
+ 
+ /**
+- * strncpy_from_unsafe_user: - Copy a NUL terminated string from unsafe user
++ * strncpy_from_user_nofault: - Copy a NUL terminated string from unsafe user
+  *				address.
+  * @dst:   Destination address, in kernel space.  This buffer must be at
+  *         least @count bytes long.
+@@ -198,7 +198,7 @@ long strncpy_from_unsafe(char *dst, const void *unsafe_addr, long count)
+  * If @count is smaller than the length of the string, copies @count-1 bytes,
+  * sets the last byte of @dst buffer to NUL and returns @count.
+  */
+-long strncpy_from_unsafe_user(char *dst, const void __user *unsafe_addr,
++long strncpy_from_user_nofault(char *dst, const void __user *unsafe_addr,
+ 			      long count)
+ {
+ 	mm_segment_t old_fs = get_fs();
+-- 
+2.39.5
+
