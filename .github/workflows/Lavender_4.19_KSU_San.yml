@@ -111,7 +111,7 @@ jobs:
         git config --global user.name "bot"
         make O=out CC=clang ARCH=arm64 CFLAGS="-mno-outline-atomics" CXXFLAGS="-mno-outline-atomics" CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- ${{ env.KERNEL_DEFCONFIG }}
         yes "" | make O=out ARCH=arm64 LLVM=1 LLVM_IAS=1 CFLAGS="-mno-outline-atomics" CXXFLAGS="-mno-outline-atomics" CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip
-        cp out/arch/arm64/boot/${{ env.KERNEL_FILE }} $GITHUB_WORKSPACE/AnyKernel3
+        cp out/arch/arm64/boot/${{ env.KERNEL_FILE }} /home/runner/work/My_KSU_Action/My_KSU_Action/AnyKernel3
     
 
     
@@ -120,4 +120,4 @@ jobs:
       with:
         name: Lavender_4.19_${{ env.BUILD_TIME}}
         path: |
-          $GITHUB_WORKSPACE/AnyKernel3/*
+          /home/runner/work/My_KSU_Action/My_KSU_Action/AnyKernel3/*
