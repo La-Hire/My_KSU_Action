@@ -59,7 +59,7 @@ jobs:
 
     - name: Download AK3_SOURCE
       run: |
-        git clone --depth=1 https://github.com/ImSpiDy/AnyKernel3 AnyKernel3
+        git clone --depth=1 ${{ env.AK3_SOURCE }} AnyKernel3
         sed -i 's/device\.name1=maguro/device\.name1=lavender/g' AnyKernel3/anykernel.sh
         sed -i 's/BLOCK=\/dev\/block\/platform\/omap\/omap_hsmmc\.0\/by-name\/boot/BLOCK=\/dev\/block\/bootdevice\/by-name\/boot/g' AnyKernel3/anykernel.sh
 
