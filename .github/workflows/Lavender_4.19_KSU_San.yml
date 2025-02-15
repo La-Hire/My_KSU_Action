@@ -1,4 +1,4 @@
-name: Build Lavender 4.19 KSU
+name: Build Lavender 4.19 KSU San
 
 on:
   workflow_dispatch:
