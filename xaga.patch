@@ -17,9 +17,8 @@ index cdf5620e2..21dd6124c 100644
  
  source "drivers/gpu/drm/mediatek/mediatek_v2/Kconfig"
 -source "drivers/gpu/drm/mediatek/mml/Kconfig"
+\ No newline at end of file
 +source "drivers/gpu/drm/mediatek/mml/Kconfig"
-+
-+
 diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
 index 12be0fe0f..e729b24e2 100644
 --- a/drivers/input/misc/Kconfig
