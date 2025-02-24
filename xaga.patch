@@ -3,12 +3,6 @@ From: Your Name <you@example.com>
 Date: Sun, 23 Feb 2025 17:55:46 +0800
 Subject: [PATCH] type error
 
----
- drivers/gpu/drm/mediatek/Kconfig              |  2 +-
- drivers/input/misc/Kconfig                    |  4 +--
- drivers/input/touchscreen/goodix_9916/Kconfig | 32 +++++++++----------
- 3 files changed, 19 insertions(+), 19 deletions(-)
-
 diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
 index 21dd6124c..cdf5620e2 100644
 --- a/drivers/gpu/drm/mediatek/Kconfig
@@ -35,6 +29,5 @@ index e729b24e2..12be0fe0f 100644
  
  config INPUT_88PM860X_ONKEY
  	tristate "88PM860x ONKEY support"
--- 
-2.39.5
+
 
