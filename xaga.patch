@@ -1,10 +1,15 @@
-From bb6dd0749a6f2b1333f9b6e38ece7a32ab5153e8 Mon Sep 17 00:00:00 2001
+From d421f93cb8fb51bedccf4f3bdefecff89efaf19d Mon Sep 17 00:00:00 2001
 From: Your Name <you@example.com>
-Date: Sun, 23 Feb 2025 17:55:46 +0800
-Subject: [PATCH] type error
+Date: Mon, 24 Feb 2025 16:27:42 +0800
+Subject: [PATCH] fix
+
+---
+ drivers/gpu/drm/mediatek/Kconfig | 2 +-
+ drivers/input/misc/Kconfig       | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
-index 21dd6124c..cdf5620e2 100644
+index cdf5620e2..21dd6124c 100644
 --- a/drivers/gpu/drm/mediatek/Kconfig
 +++ b/drivers/gpu/drm/mediatek/Kconfig
 @@ -29,4 +29,4 @@ config DRM_MEDIATEK_HDMI
@@ -12,22 +17,23 @@ index 21dd6124c..cdf5620e2 100644
  
  source "drivers/gpu/drm/mediatek/mediatek_v2/Kconfig"
 -source "drivers/gpu/drm/mediatek/mml/Kconfig"
-\ No newline at end of file
 +source "drivers/gpu/drm/mediatek/mml/Kconfig"
+\ No newline at end of file
 diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index e729b24e2..12be0fe0f 100644
+index 12be0fe0f..e729b24e2 100644
 --- a/drivers/input/misc/Kconfig
 +++ b/drivers/input/misc/Kconfig
 @@ -13,8 +13,8 @@ menuconfig INPUT_MISC
  
  if INPUT_MISC
  
--source "drivers/input/misc/aw8697_haptic/Kconfig
--source "drivers/input/misc/aw8624_haptic/Kconfig
-+source "drivers/input/misc/aw8697_haptic/Kconfig"
-+source "drivers/input/misc/aw8624_haptic/Kconfig"
+-source "drivers/input/misc/aw8697_haptic/Kconfig"
+-source "drivers/input/misc/aw8624_haptic/Kconfig"
++source "drivers/input/misc/aw8697_haptic/Kconfig
++source "drivers/input/misc/aw8624_haptic/Kconfig
  
  config INPUT_88PM860X_ONKEY
  	tristate "88PM860x ONKEY support"
-
+-- 
+2.39.5
 
