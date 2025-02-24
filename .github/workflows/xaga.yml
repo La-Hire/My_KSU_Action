@@ -31,7 +31,7 @@ jobs:
       run: |
         echo "BUILD_TIME=$(TZ=Asia/Shanghai date "+%Y%m%d%H%M")" >> $GITHUB_ENV
         sudo apt-get update
-        sudo apt-get install git flex lzop bison make libssl-dev python3 python-is-python3 libncurses-dev
+        sudo apt-get install git flex lzop bison make libssl-dev python3 python-is-python3 libncurses-dev dos2unix
 
 
 
@@ -53,6 +53,7 @@ jobs:
       run: |
         cd project
         git apply ../xaga.patch
+        dos2unix drivers/input/touchscreen/goodix_9916/Kconfig
         sed -i 's/-dirty//g' scripts/setlocalversion
               
     - name: Build kernel
