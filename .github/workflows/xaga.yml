@@ -52,7 +52,8 @@ jobs:
     - name: Setup Patches
       run: |
         cd project
-        git apply ../xaga.patch
+        sed -i 's/drivers\/input\/misc\/aw8697_haptic\/Kconfig/drivers\/input\/misc\/aw8697_haptic\/Kconfig\"/g' drivers/input/misc/Kconfig
+        sed -i 's/drivers\/input\/misc\/aw8624_haptic\/Kconfig/drivers\/input\/misc\/aw8624_haptic\/Kconfig\"/g' drivers/input/misc/Kconfig
         dos2unix drivers/input/touchscreen/goodix_9916/Kconfig
         sed -i 's/-dirty//g' scripts/setlocalversion
               
