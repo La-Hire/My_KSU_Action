@@ -110,8 +110,8 @@ jobs:
         export PATH=$GITHUB_WORKSPACE/toolchains/neutron-clang/bin:$GITHUB_WORKSPACE/gcc/bin:$PATH
         export ARCH=arm64
         export SUBARCH=arm64
-        make -j"$nproc" O=out CC=clang HOSTCC=clang ARCH=arm64 ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-  CROSS_COMPILE_COMPAT=arm-linux-gnueabi- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 LLVM_IAS=1 ${{ env.KERNEL_DEFCONFIG }}
-        make -j"$nproc" O=out CC=clang HOSTCC=clang ARCH=arm64 ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-  CROSS_COMPILE_COMPAT=arm-linux-gnueabi- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 LLVM_IAS=1
+        make O=out CC=clang HOSTCC=clang ARCH=arm64 ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-  CROSS_COMPILE_COMPAT=arm-linux-gnueabi- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 LLVM_IAS=1 ${{ env.KERNEL_DEFCONFIG }}
+        make -j2 O=out CC=clang HOSTCC=clang ARCH=arm64 ARCH=arm64 SUBARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-  CROSS_COMPILE_COMPAT=arm-linux-gnueabi- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 LLVM_IAS=1
         cp out/arch/arm64/boot/${{ env.KERNEL_FILE }} /home/runner/work/My_KSU_Action/My_KSU_Action/AnyKernel3
     
 
