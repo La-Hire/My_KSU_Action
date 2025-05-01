@@ -1,3 +1,5 @@
+https://github.com/pix106/android_kernel_xiaomi_southwest-4.19
+
 https://github.com/ImSpiDy/kernel_xiaomi_lavender-4.19
 
 https://github.com/RedmiNote7-Series/4.19_kernel_xiaomi_sdm660
