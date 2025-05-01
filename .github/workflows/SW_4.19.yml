@@ -1,0 +1,126 @@
+name: Build Lavender 4.19 KSU SW
+
+on:
+  workflow_dispatch:
+
+    inputs:
+      KERNEL_SOURCE:
+        description: 'Kernel Source'
+        required: true
+        default: 'pix106/android_kernel_xiaomi_southwest-4.19'
+      KERNEL_SOURCE_BRANCH:
+        description: 'Branch'
+        required: true
+        default: 'main-dynamic'
+      KERNEL_DEFCONFIG:
+        description: 'Defconfig'
+        required: true
+        default: 'lavender_defconfig'
+      KERNEL_FILE:
+        description: 'Your kernel out image name'
+        required: true
+        default: 'Image.gz-dtb'
+      AK3_SOURCE:
+        description: 'AnyKernel3 Source'
+        required: true
+        default: 'https://github.com/osm0sis/AnyKernel3'
+
+      USE_KERNELSU:
+        description: 'Use KernelSU'
+        required: true
+        default: 'false'
+        type: boolean
+      
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+          fetch-depth: 0
+          
+    - name: Setup Configuration
+      run: |
+        echo "KERNEL_SOURCE=${{ github.event.inputs.KERNEL_SOURCE }}" >> $GITHUB_ENV
+        echo "KERNEL_SOURCE_BRANCH=${{ github.event.inputs.KERNEL_SOURCE_BRANCH }}" >> $GITHUB_ENV
+        echo "KERNEL_DEFCONFIG=${{ github.event.inputs.KERNEL_DEFCONFIG }}" >> $GITHUB_ENV
+        echo "KERNEL_FILE=${{ github.event.inputs.KERNEL_FILE }}" >> $GITHUB_ENV
+        echo "AK3_SOURCE=${{ github.event.inputs.AK3_SOURCE }}" >> $GITHUB_ENV
+        echo "CLANG_URL=${{ github.event.inputs.CLANG_URL }}" >> $GITHUB_ENV
+        echo "USE_KERNELSU=${{ github.event.inputs.USE_KERNELSU }}" >> $GITHUB_ENV
+
+    
+    - name: Setup build kernel environment
+      run: |
+        echo "BUILD_TIME=$(TZ=Asia/Shanghai date "+%Y%m%d%H%M")" >> $GITHUB_ENV
+        sudo apt-get update
+        sudo apt-get install git flex lzop bison make libssl-dev python3 python-is-python3 libncurses-dev
+
+    - name: Download AK3_SOURCE
+      run: |
+        git clone --depth=1 ${{ env.AK3_SOURCE }} AnyKernel3
+        sed -i 's/device\.name1=maguro/device\.name1=lavender/g' AnyKernel3/anykernel.sh
+        sed -i 's/BLOCK=\/dev\/block\/platform\/omap\/omap_hsmmc\.0\/by-name\/boot/BLOCK=\/dev\/block\/bootdevice\/by-name\/boot/g' AnyKernel3/anykernel.sh
+
+    - name: Download Clang Toolchain
+      run: |
+        mkdir -p "toolchains/neutron-clang"
+        cd "toolchains/neutron-clang"
+        curl -LO "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman"
+        chmod +x antman
+        ./antman -S
+
+    - name: Checkout Kernel Source
+      uses: actions/checkout@v4
+      with:
+        github-server-url: 'https://github.com'
+        repository: ${{ env.KERNEL_SOURCE }}
+        ref: ${{ env.KERNEL_SOURCE_BRANCH }}
+        path: project
+        submodules: recursive
+        fetch-depth: 1
+            
+    - name: Setup Patches
+      if: env.USE_KERNELSU == 'true'
+      run: |
+        cd project
+        sed -i "s/CONFIG_LTO_CLANG=y/CONFIG_LTO_CLANG=n/g" arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
+        echo "CONFIG_KALLSYMS_ALL=y" >> arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
+        git apply ../SW*.patch
+        echo "CONFIG_KSU_MANUAL_HOOK=y" >> arch/arm64/configs/${{ env.KERNEL_DEFCONFIG }}
+        
+    - name: Setup KernelSU
+      if: env.USE_KERNELSU == 'true'
+      run: |
+        cd project
+        curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
+        cd KernelSU
+        KSU_VERSION="$(($(git rev-list --count HEAD) + 10200))"
+        echo "KSUVer=$KSU_VERSION" >> $GITHUB_ENV
+        cd ..
+        git config --global user.email "bot@example.com"
+        git config --global user.name "bot"
+        git add .
+        git commit -m ksu
+              
+    - name: Build kernel
+      run: |
+        cd project
+        export PATH=$GITHUB_WORKSPACE/toolchains/neutron-clang/bin:$GITHUB_WORKSPACE/gcc/bin:$PATH
+        export ARCH=arm64
+        export SUBARCH=arm64
+        export CFLAGS="-mno-outline-atomics"
+        export CXXFLAGS="-mno-outline-atomics"
+        make -j"$nproc" O=out CC=clang ARCH=arm64 CFLAGS="-mno-outline-atomics" CXXFLAGS="-mno-outline-atomics" CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- ${{ env.KERNEL_DEFCONFIG }}
+        make -j"$nproc" O=out ARCH=arm64 LLVM=1 LLVM_IAS=1 CFLAGS="-mno-outline-atomics" CXXFLAGS="-mno-outline-atomics" CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip
+        cp out/arch/arm64/boot/${{ env.KERNEL_FILE }} /home/runner/work/My_KSU_Action/My_KSU_Action/AnyKernel3
+    
+
+    
+    - name: Upload the kernel zip
+      uses: actions/upload-artifact@v4
+      with:
+        name: Lavender_4.19_${{ env.BUILD_TIME}}
+        path: |
+          /home/runner/work/My_KSU_Action/My_KSU_Action/AnyKernel3/*
