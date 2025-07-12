@@ -7,11 +7,11 @@ on:
       KERNEL_SOURCE:
         description: 'Kernel Source'
         required: true
-        default: 'bachnxuan/android_gki_kernel_5.10_common'
+        default: 'bachnxuan/android12-5.10-lts'
       KERNEL_SOURCE_BRANCH:
         description: 'Branch'
         required: true
-        default: 'esk-base'      
+        default: 'esk/main'      
 
 jobs:
   build:
@@ -54,6 +54,7 @@ jobs:
         cd project
         sed -i '/kernelsu/d' drivers/Kconfig
         sed -i 's/-dirty//g' scripts/setlocalversion
+        sed -i 's/CONFIG_KSU=y/CONFIG_KSU=n/g' arch/arm64/configs/gki_defconfig
               
     - name: Build kernel
       run: |
