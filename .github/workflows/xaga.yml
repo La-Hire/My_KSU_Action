@@ -58,32 +58,30 @@ jobs:
         sed -i 's/drivers\/input\/misc\/aw8624_haptic\/Kconfig/drivers\/input\/misc\/aw8624_haptic\/Kconfig\"/g' drivers/input/misc/Kconfig
         dos2unix drivers/input/touchscreen/goodix_9916/Kconfig
         sed -i 's/-dirty//g' scripts/setlocalversion
-        {
-            echo "CONFIG_BPF_STREAM_PARSER=y"
-            echo "CONFIG_NETFILTER_XT_MATCH_ADDRTYPE=y"
-            echo "CONFIG_NETFILTER_XT_SET=y"
-            echo "CONFIG_IP_SET=y"
-            echo "CONFIG_IP_SET_MAX=65534"
-            echo "CONFIG_IP_SET_BITMAP_IP=y"
-            echo "CONFIG_IP_SET_BITMAP_IPMAC=y"
-            echo "CONFIG_IP_SET_BITMAP_PORT=y"
-            echo "CONFIG_IP_SET_HASH_IP=y"
-            echo "CONFIG_IP_SET_HASH_IPMARK=y"
-            echo "CONFIG_IP_SET_HASH_IPPORT=y"
-            echo "CONFIG_IP_SET_HASH_IPPORTIP=y"
-            echo "CONFIG_IP_SET_HASH_IPPORTNET=y"
-            echo "CONFIG_IP_SET_HASH_IPMAC=y"
-            echo "CONFIG_IP_SET_HASH_MAC=y"
-            echo "CONFIG_IP_SET_HASH_NETPORTNET=y"
-            echo "CONFIG_IP_SET_HASH_NET=y"
-            echo "CONFIG_IP_SET_HASH_NETNET=y"
-            echo "CONFIG_IP_SET_HASH_NETPORT=y"
-            echo "CONFIG_IP_SET_HASH_NETIFACE=y"
-            echo "CONFIG_IP_SET_LIST_SET=y"
-            echo "CONFIG_IP6_NF_NAT=y"
-            echo "CONFIG_IP6_NF_TARGET_MASQUERADE=y"
-          } >> ./arch/arm64/configs/gki_defconfig
-          echo "CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_BPF_STREAM_PARSER=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_NETFILTER_XT_MATCH_ADDRTYPE=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_NETFILTER_XT_SET=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_MAX=65534" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_BITMAP_IP=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_BITMAP_IPMAC=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_BITMAP_PORT=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_HASH_IP=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_HASH_IPMARK=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_HASH_IPPORT=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_HASH_IPPORTIP=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_HASH_IPPORTNET=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_HASH_IPMAC=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_HASH_MAC=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_HASH_NETPORTNET=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_HASH_NET=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_HASH_NETNET=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_HASH_NETPORT=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_HASH_NETIFACE=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP_SET_LIST_SET=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP6_NF_NAT=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_IP6_NF_TARGET_MASQUERADE=y" >> ./arch/arm64/configs/gki_defconfig
+        echo "CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE=y" >> ./arch/arm64/configs/gki_defconfig
               
     - name: Build kernel
       run: |
