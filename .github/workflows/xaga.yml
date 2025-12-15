@@ -1,4 +1,4 @@
-name: Build Xaga Kernel (esk)
+name: Build Xaga Kernel
 
 on:
   workflow_dispatch:
@@ -7,11 +7,11 @@ on:
       KERNEL_SOURCE:
         description: 'Kernel Source'
         required: true
-        default: 'xiaomi-mediatek-devs/android_kernel_xiaomi_mt6895'
+        default: 'ESK-Project/android_kernel_xiaomi_mt6895'
       KERNEL_SOURCE_BRANCH:
         description: 'Branch'
         required: true
-        default: 'lineage-22.1'      
+        default: '16'      
 
 jobs:
   build:
@@ -91,10 +91,10 @@ jobs:
         export PATH=$GITHUB_WORKSPACE/clang/bin:$PATH
         export ARCH=arm64
         export SUBARCH=arm64
-        make LLVM=1 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
+        make -j$(nproc --all) LLVM=1 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
           CC="clang" LD=ld.lld HOSTLD=ld.lld KCFLAGS+=-O2 \
           O=out gki_defconfig
-        make LLVM=1 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
+        make -j$(nproc --all) LLVM=1 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
           CC="clang" LD=ld.lld HOSTLD=ld.lld KCFLAGS+=-O2 \
           O=out
     
