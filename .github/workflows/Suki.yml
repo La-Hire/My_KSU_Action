@@ -54,7 +54,7 @@ jobs:
       - name: Build kernel
         run: |
           cd project
-          export PATH=$GITHUB_WORKSPACE/toolchains/neutron-clang/bin:$GITHUB_WORKSPACE/gcc/bin:$PATH
+          export PATH=$GITHUB_WORKSPACE/gcc64/bin:$GITHUB_WORKSPACE/clang/bin:$PATH
           export ARCH=arm64
           export SUBARCH=arm64
           make O=out ARCH=arm64 SUBARCH=arm64 CC=clang HOSTCC=clang CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-android- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 ${{ env.KERNEL_DEFCONFIG }}
